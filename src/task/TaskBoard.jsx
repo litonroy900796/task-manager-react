@@ -14,13 +14,20 @@ export default function TaskBoard() {
             "I want to Learn React such thanI can treat it like my slave and make it do whatever I want to do.",
         tags: ["web", "react", "js"],
         priority: "High",
-        isFavorite: true,
+        isFavorite: false,
     };
     const [taskList , setTaskList] = useState([defaultTask])
     const [showAddModal, setShowAddModal] = useState(false);
-    
-    function HandleAddTask(newTask){
-        setTaskList([...taskList, newTask]);
+    const [taskUpdate, setTaskUpdate] = useState(null)
+    function HandleAddEditTask(newTask,isAdd){
+        if(isAdd){
+
+            setTaskList([...taskList, newTask]);
+        }else{
+            const updatedTasks = taskList.map(task => task.id === newTask.id ? newTask : task);
+            setTaskList(updatedTasks);
+            setTaskUpdate(null);
+        }
         setShowAddModal(false);
     }
     function handleCloseClick() {
@@ -28,12 +35,31 @@ export default function TaskBoard() {
         
     }
 
+    function handleTaskEdit(task) {
+        setTaskUpdate(task);
+        setShowAddModal(true);
+    }
+    function handleIsFavorite(taskId) {
+        const isFavorite = taskList.map((task) => {
+            if (task.id === taskId) {
+                return{
+                    ...task,
+                    isFavorite: !task.isFavorite
+                }
+            } else {
+                return task;
+            }
+        });
+        setTaskList(isFavorite)
+    }
+    
     return (
         <section className="mb-20" id="tasks">
             {showAddModal && (
                 <AddTaskModal
-                   onSave={HandleAddTask}
+                   onSave={HandleAddEditTask}
                     onCloseClick={handleCloseClick}
+                    taskUpdate={taskUpdate}
                     
                 />
             )}
@@ -51,7 +77,8 @@ export default function TaskBoard() {
                         
                         <TaskList
                             tasks={taskList}
-                            
+                            handleTaskEdit={handleTaskEdit}
+                            handleIsFavorite={handleIsFavorite}
                         />
                     }
                 </div>
