@@ -7,7 +7,7 @@ import TaskList from "./TaskList";
 import NoTasksFound from "./NoTasksFound";
 
 export default function TaskBoard() {
-    const defaultTask = [{
+    const defaultTask = {
         id: crypto.randomUUID(),
         title: "Learn React Native",
         description:
@@ -15,14 +15,14 @@ export default function TaskBoard() {
         tags: ["web", "react", "js"],
         priority: "High",
         isFavorite: true,
-    }];
-    
+    };
+    const [taskList , setTaskList] = useState([defaultTask])
     const [showAddModal, setShowAddModal] = useState(false);
-
-
-
-
     
+    function HandleAddTask(newTask){
+        setTaskList([...taskList, newTask]);
+        setShowAddModal(false);
+    }
     function handleCloseClick() {
         setShowAddModal(false);
         
@@ -32,7 +32,7 @@ export default function TaskBoard() {
         <section className="mb-20" id="tasks">
             {showAddModal && (
                 <AddTaskModal
-                   
+                   onSave={HandleAddTask}
                     onCloseClick={handleCloseClick}
                     
                 />
@@ -50,7 +50,7 @@ export default function TaskBoard() {
                     {
                         
                         <TaskList
-                            tasks={defaultTask}
+                            tasks={taskList}
                             
                         />
                     }
