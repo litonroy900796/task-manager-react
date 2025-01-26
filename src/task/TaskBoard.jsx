@@ -17,6 +17,7 @@ export default function TaskBoard() {
         isFavorite: false,
     };
     const [taskList , setTaskList] = useState([defaultTask])
+    console.log("🚀 ~ TaskBoard ~ taskList:", taskList)
     const [showAddModal, setShowAddModal] = useState(false);
     const [taskUpdate, setTaskUpdate] = useState(null)
     function HandleAddEditTask(newTask,isAdd){
@@ -53,6 +54,27 @@ export default function TaskBoard() {
         setTaskList(isFavorite)
     }
     
+    function handleDeleteTask(taskId){
+        const updatedTasks = taskList.filter(task => task.id !== taskId)
+        setTaskList(updatedTasks);
+    }
+    function handleDeleteAllTasks() {
+        setTaskList([]); // Clear the task list
+    }
+
+    function handleSearchTasks(searchTerm) {
+        
+        if (searchTerm.trim() === "") {
+            setTaskList([...taskList]); // Reset to all tasks if the search is empty
+            return;
+        }
+        const filtered = taskList.filter((task) =>
+            task.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setTaskList([...taskList,filtered]);
+    }
+
+   
     return (
         <section className="mb-20" id="tasks">
             {showAddModal && (
@@ -65,17 +87,18 @@ export default function TaskBoard() {
             )}
             <div className="container">
                 <div className="p-2 flex justify-end">
-                    <SearchTask  />
+                    <SearchTask handleSearchTasks={handleSearchTasks}  />
                 </div>
 
                 <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
                     <TaskActions
                         onAddClick={() => setShowAddModal(true)}
-                        
+                        onDeleteAll={() => handleDeleteAllTasks()}
                     />
                     {
                         
                         <TaskList
+                        handleDeleteTask={handleDeleteTask}
                             tasks={taskList}
                             handleTaskEdit={handleTaskEdit}
                             handleIsFavorite={handleIsFavorite}

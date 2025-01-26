@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { FaStar } from "react-icons/fa";
 
-export default function TaskList({ tasks,handleTaskEdit,handleIsFavorite }) {
+export default function TaskList({ tasks,handleTaskEdit,handleIsFavorite,handleDeleteTask }) {
+
     return (
         <div className="overflow-auto">
             <table className="table-fixed overflow-auto xl:w-full">
@@ -65,7 +66,7 @@ export default function TaskList({ tasks,handleTaskEdit,handleIsFavorite }) {
                                 <div className="flex items-center justify-center space-x-3">
                                     <button
                                         className="text-red-500"
-                                        
+                                        onClick={()=> handleDeleteTask(task.id)}
                                     >
                                         Delete
                                     </button>
